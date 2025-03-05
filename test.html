@@ -3,22 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Music Player</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        #controls button {
+            margin: 5px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            margin: 5px 0;
+        }
+    </style>
 </head>
 <body>
-    <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">Enable both scrolling & backdrop</button>
+    <h1>Music Player</h1>
+    <audio id="audioPlayer"></audio>
+    <div id="controls">
+        <button id="prevBtn">Previous</button>
+        <button id="playPauseBtn">Play</button>
+        <button id="nextBtn">Next</button>
+        <button id="shuffleBtn">Shuffle</button>
+        <button id="repeatBtn">Repeat</button>
+        <br>
+        <button id="rewindBtn">Rewind -10s</button>
+        <button id="forwardBtn">Forward +10s</button>
+        <input type="range" id="volumeControl" min="0" max="1" step="0.1" value="1">
+    </div>
+    <ul id="musicList"></ul>
 
-<div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Backdrop with scrolling</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-  </div>
-  <div class="offcanvas-body">
-    <p>Try scrolling the rest of the page to see this option in action.</p>
-  </div>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        const playList = [
+            { title: "Bài hát 1", src: "link_nhac_1.mp3" },
+            { title: "Bài hát 2", src: "link_nhac_2.mp3" },
+            { title: "Bài hát 3", src: "link_nhac_3.mp3" }
+        ];
 
+        let currentTrackIndex = 0;
+        let isPlaying = false;
+        let isShuffle = false;
+        let isRepeat = false;
+
+        const audioPlayer = document.getElementById('audioPlayer');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const shuffleBtn = document.getElementById('shuffleBtn');
+        const repeatBtn = document.getElementById('repeatBtn');
+        const rewindBtn = document.getElementById('rewindBtn');
+        const forwardBtn = document.getElementById('forwardBtn');
+        const volumeControl = document.getElementById('volumeControl');
+        const musicList = document.getElementById('musicList');
+
+        // Load track
+        const loadTrack = (index) => {
+            audioPlayer.src = playList[index].src;
+        };
+
+        // Toggle play/pause
+        const togglePlayPause = () => {
+            if (isPlaying) {
+                audioPlayer.pause();
+                playPauseBtn.textContent = "Play";
+            } else {
+                audioPlayer.play();
+                playPauseBtn.textContent = "Pause";
+            }
+            isPlaying = !isPlaying;
+        };
+
+        // Play next/previous track
+        const nextTrack = () => {
+            currentTrackIndex = (currentTrackIndex + 1) % playList.length;
+            loadTrack(currentTrackIndex);
+            audioPlayer.play();
+        };
+
+        const prevTrack = () => {
+            currentTrackIndex = (currentTrackIndex - 1 + playList.length) % playList.length;
+            loadTrack(currentTrackIndex);
+            audioPlayer.play();
+        };
+
+        // Shuffle tracks
+        const shuffleTracks = () => {
+            isShuffle = !isShuffle;
+            shuffleBtn.textContent = isShuffle ? "Shuffle On" : "Shuffle";
+            if (isShuffle) {
+                playList.sort(() => Math.random() - 0.5);
+                currentTrackIndex = 0;
+                loadTrack(currentTrackIndex);
+            }
+        };
+
+        // Repeat track
+        const toggleRepeat = () => {
+            isRepeat = !isRepeat;
+            repeatBtn.textContent = isRepeat ? "Repeat On" : "Repeat";
+            audioPlayer.loop = isRepeat;
+        };
+
+        // Rewind and forward
+        const rewind = () => {
+            audioPlayer.currentTime -= 10;
+        };
+
+        const forward = () => {
+            audioPlayer.currentTime += 10;
+        };
+
+        // Adjust volume
+        volumeControl.addEventListener('input', () => {
+            audioPlayer.volume = volumeControl.value;
+        });
+
+        // Create music list
+        playList.forEach((track, index) => {
+            const li = document.createElement('li');
+            li.textContent = track.title;
+            li.addEventListener('click', () => {
+                currentTrackIndex = index;
+                loadTrack(currentTrackIndex);
+                audioPlayer.play();
+            });
+            musicList.appendChild(li);
+        });
+
+        // Initialize
+        loadTrack(currentTrackIndex);
+
+        // Add event listeners
+        playPauseBtn.addEventListener('click', togglePlayPause);
+        prevBtn.addEventListener('click', prevTrack);
+        nextBtn.addEventListener('click', nextTrack);
+        shuffleBtn.addEventListener('click', shuffleTracks);
+        repeatBtn.addEventListener('click', toggleRepeat);
+        rewindBtn.addEventListener('click', rewind);
+        forwardBtn.addEventListener('click', forward);
+    </script>
 </body>
 </html>

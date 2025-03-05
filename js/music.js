@@ -36,7 +36,7 @@ const app = {
     },
     {
       name: "Chúng ta của hiện tại",
-      singer: "Raftaar x Salim Merchant x Karma",
+      singer: "Sơn Tùng M-TP",
       path: "https://chlorinebot.github.io/music/Music/N%C6%A0I%20N%C3%80Y%20C%C3%93%20ANH%20%20%20OFFICIAL%20MUSIC%20VIDEO%20%20%20S%C6%A0N%20T%C3%99NG%20M-TP.mp3",
       image:
         "https://media.vov.vn/sites/default/files/styles/large/public/2021-02/chungtacuahientai.jpg"
@@ -48,6 +48,7 @@ const app = {
       image:
         "https://photo-resize-zmp3.zmdcdn.me/w256_r1x1_jpeg/cover/5/b/5/3/5b53dd0f07b71d99916268726ccbb051.jpg"
     }
+    
   ],
   setConfig: function (key, value) {
     this.config[key] = value;
